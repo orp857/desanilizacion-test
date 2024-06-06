@@ -8,19 +8,20 @@ from langchain.prompts import (
     MessagesPlaceholder
 )
 
-from dotenv import load_dotenv
-import os
 import openai
 from streamlit_chat import message
 from utils import *
 
+
+from dotenv import load_dotenv
+import os
+
+
 import streamlit as st
 
-# Cargar variables de entorno
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
 # Define las variables de entorno y otros secrets
+
+
 class Document:
     def __init__(self, page_content, metadata):
         self.page_content = page_content
@@ -31,7 +32,8 @@ class Document:
 
     __str__ = __repr__
 
-st.markdown("<h2 style='text-align: center;'>Consulta lo que desees sobre Desalinización</h2>", unsafe_allow_html=True)
+
+st.markdown("<h2 style='text-align: center;'>Consulta lo que desees sobre seguridad y reglamentos de Colbun</h2>", unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -40,7 +42,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
+st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
+
 
 if 'responses' not in st.session_state:
     st.session_state['responses'] = ["En que puedo ayudarte hoy"]
@@ -48,14 +51,18 @@ if 'responses' not in st.session_state:
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
+
+
 llm = ChatOpenAI(model_name="gpt-4", openai_api_key=OPENAI_API_KEY)
 
 if 'buffer_memory' not in st.session_state:
-    st.session_state.buffer_memory = ConversationBufferWindowMemory(k=3, return_messages=True)
+            st.session_state.buffer_memory=ConversationBufferWindowMemory(k=3,return_messages=True)
+
 
 system_msg_template = SystemMessagePromptTemplate.from_template(
-    template="""Hola, soy tu asistente regulatorio virtual, ¿En qué puedo ayudarte hoy?"""
-)
+    template="""Responda la pregunta con la mayor veracidad posible utilizando el contexto proporcionado,
+y si la respuesta no está contenida en el texto a continuación, diga 'Podrias preguntarle al equipo MASSO, seguramente ellos podran orientarte' """)
+
 
 human_msg_template = HumanMessagePromptTemplate.from_template(template="{input}")
 
@@ -63,10 +70,14 @@ prompt_template = ChatPromptTemplate.from_messages([system_msg_template, Message
 
 conversation = ConversationChain(memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
 
+
+
+
 # container for chat history
 response_container = st.container()
 # container for text box
 textcontainer = st.container()
+
 
 with textcontainer:
     query = st.text_input("Consulta: ", key="input")
@@ -74,15 +85,21 @@ with textcontainer:
         with st.spinner("Escribiendo..."):
             conversation_string = get_conversation_string()
             st.code(conversation_string)
+            #user_entities = extract_entities(query)
+            #print("#######")
+            #print(user_entities)
             refined_query = query_refiner(conversation_string, query)
+            #st.subheader("Refined Query:")
+            #st.write(refined_query)
             context = get_answer(refined_query)
+            print(context)  
             response = conversation.predict(input=f"Context:\n {context} \n\n Query:\n{query}")
-            st.session_state.requests.append(query)
-            st.session_state.responses.append(response)
-            
+        st.session_state.requests.append(query)
+        st.session_state.responses.append(response) 
 with response_container:
     if st.session_state['responses']:
+
         for i in range(len(st.session_state['responses'])):
-            message(st.session_state['responses'][i], key=str(i))
+            message(st.session_state['responses'][i],key=str(i))
             if i < len(st.session_state['requests']):
-                message(st.session_state["requests"][i], is_user=True, key=str(i) + '_user')
+                message(st.session_state["requests"][i], is_user=True,key=str(i)+ '_user')
