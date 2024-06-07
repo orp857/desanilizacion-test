@@ -103,7 +103,8 @@ def get_answer(query):
     similar_docs = get_similar_docs_pinecone(query)
     print(similar_docs)
     print('------')
-    answer = qa({"input_documents": similar_docs, "question": query}, return_only_outputs=True)
+    answer = QA({"input_documents": similar_docs, "question": query}, return_only_outputs=True)  
+
     return answer
 
 # Plantilla de aviso inicial
