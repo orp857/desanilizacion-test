@@ -17,8 +17,15 @@ OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
 
 MODEL_NAME = "text-embedding-ada-002"
-pinecone.init(api_key=PINECONE_API_KEY, environment='us-east-1')
-INDEX_PINECONE = pinecone.Index(index_name='desanilizacion')
+from pinecone import Pinecone, ServerlessSpec
+
+# Inicializa pinecone
+pc = Pinecone(
+        api_key=os.environ.get('PINECONE_API_KEY')
+    )
+
+#pinecone.init(api_key=PINECONE_API_KEY, environment='us-east-1')
+INDEX_PINECONE = pc.Index(index_name='desanilizacion')
 EMBEDDINGS = OpenAIEmbeddings()
 
 # Clase para representar un documento
