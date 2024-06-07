@@ -8,3 +8,4 @@ transformers
 openai==0.28
 python-dotenv
 langchain_community 
+tiktoken
