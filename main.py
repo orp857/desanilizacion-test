@@ -33,7 +33,7 @@ class Document:
     __str__ = __repr__
 
 
-st.markdown("<h2 style='text-align: center;'>Hola, soy tu asistente regulatorio virtual, ¿En que puedo ayudarte hoy?</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center;'>Hola, soy tu asistente regulatorio virtual, ¿En qué puedo ayudarte hoy?</h2>", unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -46,7 +46,7 @@ st.markdown(
 
 
 if 'responses' not in st.session_state:
-    st.session_state['responses'] = ["En que puedo ayudarte hoy"]
+    st.session_state['responses'] = ["En qué puedo ayudarte hoy"]
 
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
