@@ -100,7 +100,7 @@ def get_conversation_string():
 
 # Función para obtener una respuesta a una consulta
 def get_answer(query):
-    similar_docs = get_similiar_docs_pinecone(query)
+    similar_docs = get_similar_docs_pinecone(query)
     print(similar_docs)
     print('------')
     answer = qa({"input_documents": similar_docs, "question": query}, return_only_outputs=True)
