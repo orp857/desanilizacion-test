@@ -5,6 +5,6 @@ sentence_transformers
 pinecone-client
 torch
 transformers
-openai
+openai==0.28
 python-dotenv
 langchain_community 
