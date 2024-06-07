@@ -33,7 +33,7 @@ class Document:
     __str__ = __repr__
 
 
-st.markdown("<h2 style='text-align: center;'>Consulta lo que desees sobre seguridad y reglamentos de Colbun</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center;'>Hola, soy tu asistente regulatorio virtual, ¿En que puedo ayudarte hoy?</h2>", unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -42,7 +42,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
+#st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
 
 
 if 'responses' not in st.session_state:
@@ -61,7 +61,7 @@ if 'buffer_memory' not in st.session_state:
 
 system_msg_template = SystemMessagePromptTemplate.from_template(
     template="""Responda la pregunta con la mayor veracidad posible utilizando el contexto proporcionado,
-y si la respuesta no está contenida en el texto a continuación, diga 'Podrias preguntarle al equipo MASSO, seguramente ellos podran orientarte' """)
+y si la respuesta no está contenida en el texto a continuación, diga 'Podrias preguntarle al equipo de Regulación, seguramente ellos podran orientarte' """)
 
 
 human_msg_template = HumanMessagePromptTemplate.from_template(template="{input}")
