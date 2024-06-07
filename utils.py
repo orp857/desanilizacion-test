@@ -61,25 +61,17 @@ def transform_dict_to_document(dict_list):
 
   
 
-def get_similiar_docs_pinecone(query,k=10,score=False):
-  import json
-  query_embedding= embeddings.embed_query(query)
-  result_query = index.query(query_embedding, top_k=k, include_metadata=True)
-  result_query_json=json.dumps(result_query.to_dict())
+def get_similar_docs_pinecone(query, k=10, score=False):
+    query_embedding = EMBEDDINGS.embed_query(query)
+    result_query = INDEX_PINECONE.query(query_embedding, top_k=k, include_metadata=True)
+    result_query_json = json.dumps(result_query.to_dict())
 
-  def json_to_list(json_string):
-    # Convertir la cadena de caracteres a diccionario
-    json_string = json_string.replace("'", '"')  # JSON necesita comillas dobles
-    json_dict = json.loads(json_string)
-    
-    # Extraer 'matches' que es una lista de diccionarios
-    matches_list = json_dict['matches']
+    def json_to_list(json_string):
+        json_dict = json.loads(json_string.replace("'", '"'))
+        return json_dict['matches']
 
-    return matches_list
-
-  similar_docs=transform_dict_to_document(json_to_list(result_query_json))
-
-  return similar_docs
+    similar_docs = transform_dict_to_document(json_to_list(result_query_json))
+    return similar_docs
 
 
 
