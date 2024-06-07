@@ -17,8 +17,8 @@ OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
 
 MODEL_NAME = "text-embedding-ada-002"
-pinecone.init(api_key=PINECONE_API_KEY, environment='us-west4-gcp')
-INDEX_PINECONE = pinecone.Index(index_name='codegpt')
+pinecone.init(api_key=PINECONE_API_KEY, environment='us-east-1')
+INDEX_PINECONE = pinecone.Index(index_name='desanilizacion')
 EMBEDDINGS = OpenAIEmbeddings()
 
 # Clase para representar un documento
@@ -80,7 +80,7 @@ def get_similiar_docs_pinecone(query,k=10,score=False):
 def query_refiner(conversation, query):
     response = openai.Completion.create(
         model="text-davinci-003",
-        prompt=f"Dada la consulta del usuario y el historial de la conversación, tu objetivo es formular una pregunta más refinada y específica centrada en el área de normativas eléctricas. Esta pregunta refinada debe ayudarte a obtener la información más relevante de la base de conocimientos para responder de la mejor manera posible. La consulta refinada debe estar en forma de pregunta y no exceder de 2 oraciones.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query:",
+        prompt=f"Dada la consulta del usuario y el historial de la conversación, tu objetivo es formular una pregunta más refinada y específica centrada en el área de regulación. Esta pregunta refinada debe ayudarte a obtener la información más relevante de la base de conocimientos para responder de la mejor manera posible. La consulta refinada debe estar en forma de pregunta y no exceder de 2 oraciones.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query:",
     	temperature=0.3,
         max_tokens=512,
         top_p=1,
