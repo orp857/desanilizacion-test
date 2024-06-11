@@ -136,7 +136,7 @@ QUESTION: {question}
 
 PROMPT = PromptTemplate(template=INITIAL_TEMPLATE, input_variables=["summaries", "question"])
 
-LLM = OpenAI(temperature=0.3, model_name="gpt-4", max_tokens=2048)
+LLM = OpenAI(temperature=0.3, model_name="gpt-4o", max_tokens=2048)
 QA = load_qa_with_sources_chain(llm=LLM, chain_type="stuff", prompt=PROMPT)
 
 
