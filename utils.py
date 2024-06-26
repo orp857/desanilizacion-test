@@ -66,10 +66,19 @@ def get_similar_docs_pinecone(query, k=10, score=False):
     result_query = INDEX_PINECONE.query(vector=query_embedding, top_k=k, include_metadata=True)
     result_query_json = json.dumps(result_query.to_dict())
 
-    def json_to_list(json_string):
-        json_dict = json.loads(json_string.replace("'", '"'))
-        return json_dict['matches']
+#    def json_to_list(json_string):
+#        json_dict = json.loads(json_string.replace("'", '"'))
+#        return json_dict['matches']
 
+    def json_to_list(json_string):
+        try:
+            json_dict = json.loads(json_string)
+            return json_dict['matches']
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON: {e}")
+            print(f"JSON string: {json_string[:500]}...")  # Print first 500 chars for inspection
+            raise
+        
     similar_docs = transform_dict_to_document(json_to_list(result_query_json))
     return similar_docs
 
