@@ -33,7 +33,7 @@ class Document:
     __str__ = __repr__
 
 
-st.markdown("<h2 style='text-align: center;'>Hola, soy tu asistente regulatorio virtual, ¿En qué puedo ayudarte hoy?</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center;'>Asistente Regulatorio Virtual</h2>", unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -46,7 +46,7 @@ st.markdown(
 
 
 if 'responses' not in st.session_state:
-    st.session_state['responses'] = ["En qué puedo ayudarte hoy"]
+    st.session_state['responses'] = ["Hola, soy tu asistente regulatorio virtual, ¿En qué puedo ayudarte hoy?"]
 
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
@@ -65,10 +65,13 @@ if 'buffer_memory' not in st.session_state:
 
 system_msg_template = SystemMessagePromptTemplate.from_template(
     template="""Responde la pregunta con la mayor veracidad posible utilizando el contexto proporcionado. 
-    Si no puedes encontrar una respuesta exacta en el contexto proporcionado, ofrece la mejor recomendación basada en tu conocimiento general de las regulaciones y mejores prácticas en la industria, 
+    Si no conoce la respuesta, iterar dos veces para pedir más detalles.
+Preguntar siempre si el usuario está satisfecho con la respuesta.
+Iterar hasta tres veces si el usuario no está satisfecho.
+Proporcionar fuentes al final de cada respuesta. 
+Cuando el usuario lo pida, ofrece la mejor recomendación basada en tu conocimiento general de las regulaciones y mejores prácticas en la industria, 
     incluyendo nuevas ideas y propuestas que puedan ser beneficiosas. Solo si no puedes ofrecer ninguna recomendación útil, entonces sugiere al usuario que 
     'Podrías preguntarle al equipo de Regulación, seguramente ellos podrán orientarte'.""")
-
 
 human_msg_template = HumanMessagePromptTemplate.from_template(template="{input}")
 
