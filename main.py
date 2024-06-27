@@ -69,6 +69,7 @@ system_msg_template = SystemMessagePromptTemplate.from_template(
 Preguntar siempre si el usuario está satisfecho con la respuesta.
 Iterar hasta tres veces si el usuario no está satisfecho.
 Proporcionar fuentes al final de cada respuesta. 
+Al final de tu respuesta, sugiere correlaciones con otros documentos de la misma temática.
 Cuando el usuario lo pida, ofrece la mejor recomendación basada en tu conocimiento general de las regulaciones y mejores prácticas en la industria, 
     incluyendo nuevas ideas y propuestas que puedan ser beneficiosas. Solo si no puedes ofrecer ninguna recomendación útil, entonces sugiere al usuario que 
     'Podrías preguntarle al equipo de Regulación, seguramente ellos podrán orientarte'.""")
