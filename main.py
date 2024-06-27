@@ -67,8 +67,7 @@ system_msg_template = SystemMessagePromptTemplate.from_template(
     template="""Responde la pregunta con la mayor veracidad posible utilizando el contexto proporcionado. 
     Si no puedes encontrar una respuesta exacta en el contexto proporcionado, ofrece la mejor recomendación basada en tu conocimiento general de las regulaciones y mejores prácticas en la industria, 
     incluyendo nuevas ideas y propuestas que puedan ser beneficiosas. Solo si no puedes ofrecer ninguna recomendación útil, entonces sugiere al usuario que 
-    'Podrías preguntarle al equipo de Regulación, seguramente ellos podrán orientarte'.
-    a partir de las preguntas realizadas por el usuario y tus respuestas, genera un texto compilado formato informe con todas las respuestas de la conversación.""")
+    'Podrías preguntarle al equipo de Regulación, seguramente ellos podrán orientarte'.""")
 
 
 human_msg_template = HumanMessagePromptTemplate.from_template(template="{input}")
