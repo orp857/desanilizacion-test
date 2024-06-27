@@ -44,46 +44,46 @@ st.markdown("<h2 style='text-align: center;'>Asistente Regulatorio Virtual</h2>"
 
 #st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
 
-
+# Initialize session state variables
 if 'responses' not in st.session_state:
     st.session_state['responses'] = ["Hola, soy tu asistente regulatorio virtual, ¿En qué puedo ayudarte hoy?"]
 
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
-
-# Custom function to display messages with custom logo
-def display_message(content, key, logo_path, is_user=False):
-    if is_user:
-        st.markdown(
-            f"""
-            <div style="display: flex; align-items: center; justify-content: flex-end;">
-                <div style="background-color: #dcf8c6; border-radius: 5px; padding: 10px; margin: 5px;">{content}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            f"""
-            <div style="display: flex; align-items: center;">
-                <img src="{logo_path}" width="100" height="50" style="margin-right: 10px;">
-                <div style="background-color: #f1f0f0; border-radius: 5px; padding: 10px; margin: 5px;">{content}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
 # Path to the custom bot image
 logo_path = 'https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png'
 
-# Display bot responses with custom logo
-for i, response in enumerate(st.session_state['responses']):
-    display_message(response, key=str(i), logo_path=logo_path)
+# Custom function to display bot messages with custom logo
+def display_bot_message(content, logo_path):
+    st.markdown(
+        f"""
+        <div style="display: flex; align-items: center;">
+            <img src="{logo_path}" width="50" height="50" style="margin-right: 10px;">
+            <div style="background-color: #f1f0f0; border-radius: 5px; padding: 10px; margin: 5px;">{content}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-# Display user requests
-for i, request in enumerate(st.session_state['requests']):
-    display_message(request, key=str(i), logo_path=logo_path, is_user=True)
+# Custom function to display user messages without logo
+def display_user_message(content):
+    st.markdown(
+        f"""
+        <div style="display: flex; align-items: center; justify-content: flex-end;">
+            <div style="background-color: #dcf8c6; border-radius: 5px; padding: 10px; margin: 5px;">{content}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# Display bot responses with custom logo
+for response in st.session_state['responses']:
+    display_bot_message(response, logo_path=logo_path)
+
+# Display user requests without logo
+for request in st.session_state['requests']:
+    display_user_message(request)
     
 
     
