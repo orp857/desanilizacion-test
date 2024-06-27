@@ -43,7 +43,6 @@ st.markdown("<h2 style='text-align: center;'>Asistente Regulatorio Virtual</h2>"
 # )
 
 #st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
-
 # Initialize session state variables
 if 'responses' not in st.session_state:
     st.session_state['responses'] = ["Hola, soy tu asistente regulatorio virtual, ¿En qué puedo ayudarte hoy?"]
@@ -84,7 +83,6 @@ for response in st.session_state['responses']:
 # Display user requests without logo
 for request in st.session_state['requests']:
     display_user_message(request)
-    
 
     
 llm = ChatOpenAI(model_name="gpt-4", openai_api_key=OPENAI_API_KEY)
