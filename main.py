@@ -55,6 +55,9 @@ if 'responses' not in st.session_state:
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
+if 'input' not in st.session_state:
+    st.session_state['input'] = ""
+
 # # Display a chat-like message with a custom logo
 # col1, col2 = st.columns([1, 5])  # Adjust the ratio based on your design needs
 # with col1:
@@ -99,26 +102,21 @@ textcontainer = st.container()
 
 
 with textcontainer:
-    query = st.text_input("Consulta: ", key="input")
+    query = st.text_input("Consulta: ", value=st.session_state['input'], key="input")
     if query:
         with st.spinner("Escribiendo..."):
             conversation_string = get_conversation_string()
             st.code(conversation_string)
-            #user_entities = extract_entities(query)
-            #print("#######")
-            #print(user_entities)
             refined_query = query_refiner(conversation_string, query)
-            #st.subheader("Refined Query:")
-            #st.write(refined_query)
             context = get_answer(refined_query)
-            print(context)  
             response = conversation.predict(input=f"Context:\n {context} \n\n Query:\n{query}")
         st.session_state.requests.append(query)
-        st.session_state.responses.append(response) 
+        st.session_state.responses.append(response)
+        st.session_state['input'] = ""  # Clear the input after submission
+
 with response_container:
     if st.session_state['responses']:
-
         for i in range(len(st.session_state['responses'])):
-            message(st.session_state['responses'][i],key=str(i))
+            message(st.session_state['responses'][i], key=str(i))
             if i < len(st.session_state['requests']):
-                message(st.session_state["requests"][i], is_user=True,key=str(i)+ '_user')
+                message(st.session_state["requests"][i], is_user=True, key=str(i) + '_user')
