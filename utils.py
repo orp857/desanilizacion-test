@@ -139,6 +139,7 @@ Identificar términos clave y definiciones.
 Usar lenguaje técnico adecuado.
 Desarrollar resumen técnico incluyendo estándares, regulaciones y normativas mencionadas.
 Enfocarse en puntos clave, evitando opiniones no verificadas.
+En caso que el usuario te pida, a partir de las preguntas realizadas por el usuario y tus respuestas, genera un texto compilado formato informe con todas las respuestas de la conversación.
 QUESTION: {question}
 =========
 {summaries}
