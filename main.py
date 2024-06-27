@@ -45,45 +45,11 @@ st.markdown("<h2 style='text-align: center;'>Asistente Regulatorio Virtual</h2>"
 #st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
 
 
-# Initialize session state variables
-if 'initialized' not in st.session_state:
+if 'responses' not in st.session_state:
     st.session_state['responses'] = ["Hola, soy tu asistente regulatorio virtual, ¿En qué puedo ayudarte hoy?"]
+
+if 'requests' not in st.session_state:
     st.session_state['requests'] = []
-    st.session_state['initialized'] = True  # Flag to check if initialization has occurred
-
-# Path to the custom bot image
-logo_path = 'https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png'
-
-# Custom function to display bot messages with custom logo
-def display_bot_message(content, logo_path):
-    st.markdown(
-        f"""
-        <div style="display: flex; align-items: center;">
-            <img src="{logo_path}" width="50" height="50" style="margin-right: 10px;">
-            <div style="background-color: #f1f0f0; border-radius: 5px; padding: 10px; margin: 5px;">{content}</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-# Custom function to display user messages without logo
-def display_user_message(content):
-    st.markdown(
-        f"""
-        <div style="display: flex; align-items: center; justify-content: flex-end;">
-            <div style="background-color: #dcf8c6; border-radius: 5px; padding: 10px; margin: 5px;">{content}</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-# Display bot responses with custom logo
-for response in st.session_state['responses']:
-    display_bot_message(response, logo_path=logo_path)
-
-# Display user requests without logo
-for request in st.session_state['requests']:
-    display_user_message(request)
     
 llm = ChatOpenAI(model_name="gpt-4", openai_api_key=OPENAI_API_KEY)
 
