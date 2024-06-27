@@ -35,18 +35,18 @@ class Document:
 
 st.markdown("<h2 style='text-align: center;'>Asistente Regulatorio Virtual</h2>", unsafe_allow_html=True)
 
-# st.markdown(
-#     """
-#     <img src="https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png" width="100" align="middle">
-#     """,
-#     unsafe_allow_html=True,
-# )
+st.markdown(
+    """
+    <img src="https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png" width="100" align="middle">
+    """,
+    unsafe_allow_html=True,
+)
 
-#st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
+st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
 
 
 # URL of your custom logo
-custom_logo_url = "https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png"
+#custom_logo_url = "https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png"
 
 # Initialize session states if they don't exist
 if 'responses' not in st.session_state:
@@ -55,12 +55,12 @@ if 'responses' not in st.session_state:
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
-# Display a chat-like message with a custom logo
-col1, col2 = st.columns([1, 5])  # Adjust the ratio based on your design needs
-with col1:
-    st.image(custom_logo_url, width=100)  # Adjust the width as needed to fit your layout
-with col2:
-    st.write(st.session_state['responses'][0])
+# # Display a chat-like message with a custom logo
+# col1, col2 = st.columns([1, 5])  # Adjust the ratio based on your design needs
+# with col1:
+#     st.image(custom_logo_url, width=100)  # Adjust the width as needed to fit your layout
+# with col2:
+#     st.write(st.session_state['responses'][0])
     
 llm = ChatOpenAI(model_name="gpt-4", openai_api_key=OPENAI_API_KEY)
 
