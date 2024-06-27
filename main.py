@@ -35,12 +35,12 @@ class Document:
 
 st.markdown("<h2 style='text-align: center;'>Asistente Regulatorio Virtual</h2>", unsafe_allow_html=True)
 
-st.markdown(
-    """
-    <img src="https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png" width="100" align="middle">
-    """,
-    unsafe_allow_html=True,
-)
+# st.markdown(
+#     """
+#     <img src="https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png" width="100" align="middle">
+#     """,
+#     unsafe_allow_html=True,
+# )
 
 #st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
 
@@ -51,8 +51,22 @@ if 'responses' not in st.session_state:
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
+def display_message(content, key, logo_path):
+    st.markdown(
+        f"""
+        <div style="display: flex; align-items: center;">
+            <img src="{logo_path}" width="50" height="50" style="margin-right: 10px;">
+            <div>{content}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    
+logo_path = 'https://www.colbun.cl/resourcePackages/colbunweb/assets/dist/images/header/logo.png'
 
-
+for i, response in enumerate(st.session_state['responses']):
+    display_message(response, key=str(i), logo_path=logo_path)
+    
 llm = ChatOpenAI(model_name="gpt-4", openai_api_key=OPENAI_API_KEY)
 
 if 'buffer_memory' not in st.session_state:
