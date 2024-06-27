@@ -42,7 +42,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
+#st.markdown("<h6 style='text-align: center;'>Creado por: Robinson Cornejo</h6>", unsafe_allow_html=True)
 
 
 # URL of your custom logo
