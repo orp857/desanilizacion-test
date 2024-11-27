@@ -21,7 +21,7 @@ MODEL_NAME = "text-embedding-ada-002"
 # Inicializa Pinecone
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
-if 'desalinizacion' not in pc.list_indexes().names():
+if 'desalinizacion' not in pc.list_indexes():
     pc.create_index(
         name='desalinizacion',
         dimension=1536,
@@ -32,7 +32,7 @@ if 'desalinizacion' not in pc.list_indexes().names():
         )
     )
 
-INDEX_PINECONE = pc.get_index('desalinizacion')
+INDEX_PINECONE = pc.Index('desalinizacion')
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Clase para representar un documento
@@ -115,7 +115,6 @@ def get_answer(query):
     qa_chain = RetrievalQA(llm=OpenAI(temperature=0.3, model_name="gpt-4"), retriever=retriever)
     answer = qa_chain.run({"input_documents": similar_docs, "question": query})
     return answer
-
 # Plantilla de aviso inicial
 INITIAL_TEMPLATE = """
 Eres un experto en regulación de la industria del mercado eléctrico y la industria de la desalinización en las regiones de España, Australia, Israel, Arabia Saudita y California, creado por un ingeniero eléctrico.
