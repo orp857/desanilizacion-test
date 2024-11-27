@@ -2,7 +2,7 @@ streamlit
 streamlit_chat
 langchain
 sentence_transformers
-pinecone-client
+pinecone-client==2.2.1
 torch
 transformers
 openai==0.28
