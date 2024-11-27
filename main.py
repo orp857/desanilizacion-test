@@ -1,5 +1,5 @@
 from langchain_community.chat_models import ChatOpenAI
-from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain.memory import ConversationBufferWindowMemory
 from langchain.prompts import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
@@ -66,7 +66,7 @@ human_msg_template = HumanMessagePromptTemplate.from_template(template="{input}"
 
 prompt_template = ChatPromptTemplate.from_messages([system_msg_template, MessagesPlaceholder(variable_name="history"), human_msg_template])
 
-conversation = RunnableWithMessageHistory(llm=llm, memory=st.session_state.buffer_memory, prompt=prompt_template)
+conversation = ConversationChain(memory=st.session_state.buffer_memory, prompt=prompt_template, llm=llm, verbose=True)
 
 # Container for chat history
 response_container = st.container()
@@ -81,7 +81,7 @@ with textcontainer:
             st.code(conversation_string)
             refined_query = query_refiner(conversation_string, query)
             context = get_answer(refined_query)
-            response = conversation.invoke(input=f"Context:\n {context} \n\n Query:\n{query}")
+            response = conversation.predict(input=f"Context:\n {context} \n\n Query:\n{query}")
         st.session_state.requests.append(query)
         st.session_state.responses.append(response)
 
@@ -91,3 +91,4 @@ with response_container:
             message(st.session_state['responses'][i], key=str(i))
             if i < len(st.session_state['requests']):
                 message(st.session_state["requests"][i], is_user=True, key=str(i) + '_user')
+
