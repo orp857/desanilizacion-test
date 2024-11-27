@@ -7,11 +7,12 @@ import pinecone
 import streamlit as st
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
-from langchain_openai import OpenAI, OpenAIEmbeddings
+from langchain.llms import OpenAI
+from langchain.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Pinecone as PineconeVectorStore
 
-# Load environment variables (if needed)
+# Load environment variables
 load_dotenv()
 
 # Retrieve API keys and environment from st.secrets
@@ -106,8 +107,5 @@ def query_refiner(conversation, query):
 # Function to get the conversation string
 def get_conversation_string():
     conversation_string = ""
-    for i in range(len(st.session_state['responses']) - 1):
-        conversation_string += "Human: " + st.session_state['requests'][i] + "\n"
-        conversation_string += "Bot: " + st.session_state['responses'][i + 1] + "\n"
-    return conversation_string
+    for i in range(len(st.session_state['resp
 
