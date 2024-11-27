@@ -20,7 +20,7 @@ MODEL_NAME = "text-embedding-ada-002"
 
 # Inicializa pinecone
 pinecone.init(api_key=PINECONE_API_KEY, environment='us-east-1')
-INDEX_PINECONE = pinecone.Index('desanilizacion')
+INDEX_PINECONE = pinecone.Index('desalinizacion')
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Clase para representar un documento
