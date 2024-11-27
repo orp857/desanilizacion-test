@@ -26,7 +26,7 @@ pc = Pinecone(
     )
 
 #pinecone.init(api_key=PINECONE_API_KEY, environment='us-east-1')
-INDEX_PINECONE = pc.Index('desanilizacion')
+INDEX_PINECONE = pc.Index('desalinizacion')
 EMBEDDINGS = OpenAIEmbeddings()
 
 # Clase para representar un documento
