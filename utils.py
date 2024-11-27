@@ -8,33 +8,37 @@ from langchain.chains import RetrievalQA
 from langchain_community.llms import OpenAI
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
-from langchain_community.vectorstores import Pinecone
-from pinecone import Pinecone, ServerlessSpec  # Correct import for Pinecone and ServerlessSpec
+from pinecone.core.client import PineconeClient  # Updated import
 
 # Configuración y constantes globales
 load_dotenv()
 
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-PINECONE_ENVIRONMENT = "us-east-1"  # specify the environment
+PINECONE_ENVIRONMENT = "us-east-1"
 MODEL_NAME = "text-embedding-ada-002"
 
 # Inicializa Pinecone
-pc = Pinecone(api_key=PINECONE_API_KEY)
+pc = PineconeClient(api_key=PINECONE_API_KEY)
 
 # Connect to the existing Pinecone index
 index_name = 'desalinizacion'
 
 # Ensure the index is available
-if index_name not in pc.list_indexes().names():
+existing_indexes = pc.describe_indexes()
+index_names = [index['name'] for index in existing_indexes]
+
+if index_name not in index_names:
     pc.create_index(
         name=index_name,
         dimension=1536,
         metric='cosine',
-        spec=ServerlessSpec(cloud='aws', region=PINECONE_ENVIRONMENT)
+        replicas=1,
+        pod_type='p1'
     )
 
-INDEX_PINECONE = pc.index(index_name)  # Correct method to connect to an existing index
+# Connect to the index
+INDEX_PINECONE = pc.describe_index(index_name)
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Clase para representar un documento
