@@ -94,7 +94,7 @@ def get_answer(query):
 def query_refiner(conversation, query):
     response = openai.Completion.create(
         model="gpt-3.5-turbo-instruct",
-        prompt=f"Dada la consulta del usuario y el historial de la conversación, tu objetivo es formular una pregunta más refinada y específica centrada en el área de regulación. Esta pregunta refinada debe ayudarte a obtener la información más relevante de la base de conocimientos para responder de la mejor manera posible. La consulta refinada debe estar en forma de pregunta y no exceder de 2 oraciones.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query:",
+        prompt=f"Dada la consulta del usuario y el historial de la conversación, tu objetivo es formular una pregunta más refinada y específica centrada en el área de regulación. Esta pregunta refinada debe ayudarte a obtener la información más relevante de la base de conocimientos para responder de la mejor manera posible. La consulta refinada debe estar en forma de pregunta y no exceder de 2 oraciones.\n\nCONVERSATION LOG:\n{conversation}\n\nQuery: {query}\n\nRefined Query:",
         temperature=0.3,
         max_tokens=150,
         top_p=1,
@@ -107,5 +107,8 @@ def query_refiner(conversation, query):
 # Function to get the conversation string
 def get_conversation_string():
     conversation_string = ""
-    for i in range(len(st.session_state['resp
+    for i in range(len(st.session_state['responses']) - 1):
+        conversation_string += "Human: " + st.session_state['requests'][i] + "\n"
+        conversation_string += "Bot: " + st.session_state['responses'][i + 1] + "\n"
+    return conversation_string
 
