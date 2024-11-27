@@ -9,7 +9,7 @@ from langchain_community.llms import OpenAI
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain_community.vectorstores import Pinecone
-from pinecone import Pinecone as PineconeClient, ServerlessSpec
+import pinecone  # Update: Import pinecone directly, not as PineconeClient
 
 # Configuración y constantes globales
 load_dotenv()
@@ -20,19 +20,19 @@ PINECONE_ENVIRONMENT = "us-east-1"  # specify the environment
 MODEL_NAME = "text-embedding-ada-002"
 
 # Inicializa Pinecone
-pc = PineconeClient(api_key=PINECONE_API_KEY)
+pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
 
 # Check if the index exists and handle the exception if it already exists
 index_name = 'desalinizacion'
-if index_name not in pc.list_indexes().names():
-    pc.create_index(
+if index_name not in pinecone.list_indexes():
+    pinecone.create_index(
         name=index_name,
         dimension=1536,
-        metric='cosine',
-        spec=ServerlessSpec(cloud='aws', region=PINECONE_ENVIRONMENT)
+        metric='cosine'
     )
 
-INDEX_PINECONE = pc.get_index(index_name)
+# Connect to the Pinecone index
+INDEX_PINECONE = pinecone.Index(index_name)
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Clase para representar un documento
@@ -66,11 +66,10 @@ def transform_dict_to_document(dict_list):
     # Devolver la lista de Documents
     return document_list
 
-
 def get_similar_docs_pinecone(query, k=10, score=False):
     query_embedding = EMBEDDINGS.embed_query(query)
     result_query = INDEX_PINECONE.query(vector=query_embedding, top_k=k, include_metadata=True)
-    result_query_json = json.dumps(result_query.to_dict())
+    result_query_json = json.dumps(result_query)
 
     def json_to_list(json_string):
         try:
