@@ -2,7 +2,7 @@
 import json
 import os
 import openai
-import pinecone
+from pinecone import Pinecone, ServerlessSpec
 import streamlit as st
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
@@ -18,9 +18,21 @@ PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
 
 MODEL_NAME = "text-embedding-ada-002"
 
-# Inicializa pinecone
-pinecone.init(api_key=PINECONE_API_KEY, environment='us-east-1')
-INDEX_PINECONE = pinecone.Index('desalinizacion')
+# Inicializa Pinecone
+pc = Pinecone(api_key=PINECONE_API_KEY)
+
+if 'desalinizacion' not in pc.list_indexes().names():
+    pc.create_index(
+        name='desalinizacion',
+        dimension=1536,
+        metric='euclidean',
+        spec=ServerlessSpec(
+            cloud='aws',
+            region='us-east-1'
+        )
+    )
+
+INDEX_PINECONE = pc.index('desalinizacion')
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Clase para representar un documento
@@ -53,6 +65,7 @@ def transform_dict_to_document(dict_list):
 
     # Devolver la lista de Documents
     return document_list
+
 
 def get_similar_docs_pinecone(query, k=10, score=False):
     query_embedding = EMBEDDINGS.embed_query(query)
@@ -130,5 +143,4 @@ QUESTION: {question}
 """
 
 PROMPT = PromptTemplate(template=INITIAL_TEMPLATE, input_variables=["summaries", "question"])
-
 
