@@ -8,8 +8,7 @@ from langchain.chains import RetrievalQA
 from langchain_community.llms import OpenAI
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
-from langchain.vectorstores import Pinecone
-from langchain.vectorstores.pinecone import PineconeRetriever
+from langchain_community.vectorstores import Pinecone
 import pinecone
 
 # Configuración y constantes globales
@@ -29,7 +28,7 @@ if index_name not in pinecone.list_indexes():
     pinecone.create_index(
         name=index_name,
         dimension=1536,
-        metric='euclidean'
+        metric='cosine'
     )
 
 INDEX_PINECONE = pinecone.Index(index_name)
@@ -111,8 +110,7 @@ def get_conversation_string():
 # Función para obtener una respuesta a una consulta
 def get_answer(query):
     similar_docs = get_similar_docs_pinecone(query)
-    retriever = PineconeRetriever(embedding_function=EMBEDDINGS, index=INDEX_PINECONE)
-    qa_chain = RetrievalQA(llm=OpenAI(temperature=0.3, model_name="gpt-4"), retriever=retriever)
+    qa_chain = RetrievalQA(llm=OpenAI(temperature=0.3, model_name="gpt-4"), retriever=Pinecone(index=INDEX_PINECONE, embedding_function=EMBEDDINGS))
     answer = qa_chain.run({"input_documents": similar_docs, "question": query})
     return answer
 
@@ -139,10 +137,7 @@ En caso que el usuario te pida, a partir de las preguntas realizadas por el usua
 QUESTION: {question}
 =========
 {summaries}
-=========
-"""
+========="""
 
 PROMPT = PromptTemplate(template=INITIAL_TEMPLATE, input_variables=["summaries", "question"])
-
-
 
