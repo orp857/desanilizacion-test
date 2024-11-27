@@ -32,7 +32,7 @@ if 'desalinizacion' not in pc.list_indexes().names():
         )
     )
 
-INDEX_PINECONE = pc.index('desalinizacion')
+INDEX_PINECONE = pc.get_index('desalinizacion')
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Clase para representar un documento
