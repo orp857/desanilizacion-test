@@ -9,7 +9,7 @@ from langchain_community.llms import OpenAI
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain_community.vectorstores import Pinecone
-import pinecone
+from pinecone import Pinecone as PineconeClient, ServerlessSpec
 
 # Configuración y constantes globales
 load_dotenv()
@@ -20,18 +20,19 @@ PINECONE_ENVIRONMENT = "us-east-1"  # specify the environment
 MODEL_NAME = "text-embedding-ada-002"
 
 # Inicializa Pinecone
-pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
+pc = PineconeClient(api_key=PINECONE_API_KEY)
 
 # Check if the index exists and handle the exception if it already exists
 index_name = 'desalinizacion'
-if index_name not in pinecone.list_indexes():
-    pinecone.create_index(
+if index_name not in pc.list_indexes().names():
+    pc.create_index(
         name=index_name,
         dimension=1536,
-        metric='cosine'
+        metric='cosine',
+        spec=ServerlessSpec(cloud='aws', region=PINECONE_ENVIRONMENT)
     )
 
-INDEX_PINECONE = pinecone.Index(index_name)
+INDEX_PINECONE = pc.get_index(index_name)
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Clase para representar un documento
@@ -140,4 +141,3 @@ QUESTION: {question}
 ========="""
 
 PROMPT = PromptTemplate(template=INITIAL_TEMPLATE, input_variables=["summaries", "question"])
-
