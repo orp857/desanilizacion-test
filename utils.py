@@ -1,5 +1,3 @@
-
-# Importaciones de servicios y bibliotecas
 import json
 import os
 import openai
@@ -7,8 +5,8 @@ import pinecone
 import streamlit as st
 from dotenv import load_dotenv
 from langchain.chains.qa_with_sources import load_qa_with_sources_chain
-from langchain.llms import OpenAI
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.llms import OpenAI
+from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 
 # Configuración y constantes globales
@@ -16,17 +14,15 @@ load_dotenv()
 
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+PINECONE_ENVIRONMENT = st.secrets["PINECONE_ENVIRONMENT"]  # Make sure this is in your secrets
 
 MODEL_NAME = "text-embedding-ada-002"
-from pinecone import Pinecone, ServerlessSpec
 
-# Inicializa pinecone
-pc = Pinecone(
-        api_key=os.environ.get('PINECONE_API_KEY')
-    )
+# Initialize pinecone
+pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
 
-#pinecone.init(api_key=PINECONE_API_KEY, environment='us-east-1')
-INDEX_PINECONE = pc.Index('desalinizacion')
+# Access the index
+INDEX_PINECONE = pinecone.Index('desalinizacion')
 EMBEDDINGS = OpenAIEmbeddings()
 
 # Clase para representar un documento
