@@ -2,44 +2,37 @@
 import json
 import os
 import openai
-from pinecone import Pinecone, ServerlessSpec, PineconeApiException
 import streamlit as st
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
 from langchain_community.llms import OpenAI
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
+from langchain.vectorstores import Pinecone
+from langchain.vectorstores.pinecone import PineconeRetriever
+import pinecone
 
 # Configuración y constantes globales
 load_dotenv()
 
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-
+PINECONE_ENVIRONMENT = "us-east-1"  # specify the environment
 MODEL_NAME = "text-embedding-ada-002"
 
 # Inicializa Pinecone
-pc = Pinecone(api_key=PINECONE_API_KEY)
+pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
 
 # Check if the index exists and handle the exception if it already exists
-try:
-    if 'desalinizacion' not in pc.list_indexes():
-        pc.create_index(
-            name='desalinizacion',
-            dimension=1536,
-            metric='euclidean',
-            spec=ServerlessSpec(
-                cloud='aws',
-                region='us-east-1'
-            )
-        )
-except PineconeApiException as e:
-    if e.status == 409:  # Handle the case where the index already exists
-        st.warning("Index 'desalinizacion' already exists, proceeding without re-creating it.")
-    else:
-        raise e
+index_name = 'desalinizacion'
+if index_name not in pinecone.list_indexes():
+    pinecone.create_index(
+        name=index_name,
+        dimension=1536,
+        metric='euclidean'
+    )
 
-INDEX_PINECONE = pc.Index('desalinizacion')
+INDEX_PINECONE = pinecone.Index(index_name)
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
 # Clase para representar un documento
@@ -118,10 +111,11 @@ def get_conversation_string():
 # Función para obtener una respuesta a una consulta
 def get_answer(query):
     similar_docs = get_similar_docs_pinecone(query)
-    retriever = INDEX_PINECONE.as_retriever()
+    retriever = PineconeRetriever(embedding_function=EMBEDDINGS, index=INDEX_PINECONE)
     qa_chain = RetrievalQA(llm=OpenAI(temperature=0.3, model_name="gpt-4"), retriever=retriever)
     answer = qa_chain.run({"input_documents": similar_docs, "question": query})
     return answer
+
 # Plantilla de aviso inicial
 INITIAL_TEMPLATE = """
 Eres un experto en regulación de la industria del mercado eléctrico y la industria de la desalinización en las regiones de España, Australia, Israel, Arabia Saudita y California, creado por un ingeniero eléctrico.
@@ -149,5 +143,6 @@ QUESTION: {question}
 """
 
 PROMPT = PromptTemplate(template=INITIAL_TEMPLATE, input_variables=["summaries", "question"])
+
 
 
