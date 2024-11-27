@@ -2,7 +2,7 @@
 import json
 import os
 import openai
-from pinecone import Pinecone, ServerlessSpec
+from pinecone import Pinecone, ServerlessSpec, PineconeApiException
 import streamlit as st
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
@@ -21,16 +21,23 @@ MODEL_NAME = "text-embedding-ada-002"
 # Inicializa Pinecone
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
-if 'desalinizacion' not in pc.list_indexes():
-    pc.create_index(
-        name='desalinizacion',
-        dimension=1536,
-        metric='euclidean',
-        spec=ServerlessSpec(
-            cloud='aws',
-            region='us-east-1'
+# Check if the index exists and handle the exception if it already exists
+try:
+    if 'desalinizacion' not in pc.list_indexes():
+        pc.create_index(
+            name='desalinizacion',
+            dimension=1536,
+            metric='euclidean',
+            spec=ServerlessSpec(
+                cloud='aws',
+                region='us-east-1'
+            )
         )
-    )
+except PineconeApiException as e:
+    if e.status == 409:  # Handle the case where the index already exists
+        st.warning("Index 'desalinizacion' already exists, proceeding without re-creating it.")
+    else:
+        raise e
 
 INDEX_PINECONE = pc.Index('desalinizacion')
 EMBEDDINGS = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
@@ -142,4 +149,5 @@ QUESTION: {question}
 """
 
 PROMPT = PromptTemplate(template=INITIAL_TEMPLATE, input_variables=["summaries", "question"])
+
 
